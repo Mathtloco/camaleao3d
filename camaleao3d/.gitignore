@@ -1,0 +1,34 @@
+# dependências
+node_modules/
+.pnp
+.pnp.js
+
+# build
+.next/
+out/
+build/
+dist/
+
+# variáveis de ambiente — NUNCA commitar
+.env
+.env.local
+.env.production
+.env*.local
+
+# backups locais do banco
+backups/
+*.sql.gz
+*.dump
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+*.swp
+
+# logs
+*.log
+npm-debug.log*
