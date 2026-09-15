@@ -73,18 +73,33 @@ export default function Header() {
             Categorias
           </p>
           {categorias.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/produtos?categoria=${c.slug}`}
-              onClick={() => setMenuAberto(false)}
-              className="flex items-center gap-2.5 py-2.5 text-sm"
-            >
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ background: c.cor }}
-              />
-              {c.nome}
-            </Link>
+            <div key={c.slug}>
+              <Link
+                href={`/produtos?categoria=${c.slug}`}
+                onClick={() => setMenuAberto(false)}
+                className="flex items-center gap-2.5 py-2.5 text-sm"
+              >
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ background: c.cor }}
+                />
+                {c.nome}
+              </Link>
+              {c.subcategorias && (
+                <div className="mb-1 ml-5 flex flex-wrap gap-x-4 gap-y-1">
+                  {c.subcategorias.map((sc) => (
+                    <Link
+                      key={sc.slug}
+                      href={`/produtos?categoria=${c.slug}&sub=${sc.slug}`}
+                      onClick={() => setMenuAberto(false)}
+                      className="text-sm text-giz"
+                    >
+                      {sc.nome}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
       )}

@@ -26,6 +26,8 @@ const config: Config = {
           cafe:        '#E0614F',
           miniatura:   '#2E8FD4',
           chaveiro:    '#7C5CD6',
+          brinquedo:   '#EE7B30',
+          sensorial:   '#17B3B0',
         },
       },
       fontFamily: {

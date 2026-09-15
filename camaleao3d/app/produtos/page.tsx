@@ -5,23 +5,29 @@ import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CardProduto from '@/components/CardProduto'
 import OrcamentoPersonalizado from '@/components/OrcamentoPersonalizado'
-import { categorias, produtosExemplo } from '@/lib/catalogo'
+import { categorias, produtosExemplo, subcategoriasDe } from '@/lib/catalogo'
 
 // O filtro lê a categoria no navegador, e não no servidor, para a página
 // continuar sendo um arquivo estático — é o que permite publicar no
 // GitHub Pages sem nada rodando por trás.
 
 function Conteudo() {
-  const atual = useSearchParams().get('categoria') ?? undefined
+  const params = useSearchParams()
+  const atual = params.get('categoria') ?? undefined
+  const sub = params.get('sub') ?? undefined
+
   const cat = categorias.find((c) => c.slug === atual)
-  const lista = atual
-    ? produtosExemplo.filter((p) => p.categoria === atual)
-    : produtosExemplo
+  const subs = subcategoriasDe(atual)
+  const subAtual = subs.find((s) => s.slug === sub)
+
+  const lista = produtosExemplo
+    .filter((p) => (atual ? p.categoria === atual : true))
+    .filter((p) => (sub ? p.subcategoria === sub : true))
 
   return (
     <>
       <h1 className="text-4xl font-extrabold sm:text-5xl">
-        {cat ? cat.nome : 'Todos os produtos'}
+        {subAtual ? subAtual.nome : cat ? cat.nome : 'Todos os produtos'}
       </h1>
       <p className="mt-2 text-noite/65">
         {cat ? cat.chamada : 'Escolha a peça e depois a cor do filamento.'}
@@ -57,6 +63,33 @@ function Conteudo() {
           )
         })}
       </div>
+
+      {subs.length > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <span className="text-sm text-noite/55">Dentro de {cat?.nome}:</span>
+          <Link
+            href={`/produtos?categoria=${atual}`}
+            className={`rounded-full border px-3.5 py-1.5 text-sm ${
+              !sub ? 'border-noite bg-noite text-folha' : 'border-nevoa hover:border-noite'
+            }`}
+          >
+            Todos
+          </Link>
+          {subs.map((sc) => (
+            <Link
+              key={sc.slug}
+              href={`/produtos?categoria=${atual}&sub=${sc.slug}`}
+              className={`rounded-full border px-3.5 py-1.5 text-sm ${
+                sub === sc.slug
+                  ? 'border-noite bg-noite text-folha'
+                  : 'border-nevoa hover:border-noite'
+              }`}
+            >
+              {sc.nome}
+            </Link>
+          ))}
+        </div>
+      )}
 
       {lista.length === 0 ? (
         <div className="mt-14 rounded-peca border border-nevoa p-8">

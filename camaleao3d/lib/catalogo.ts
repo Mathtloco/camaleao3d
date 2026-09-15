@@ -5,6 +5,11 @@
 // A cor vem do filamento, então não lasca nem desbota.
 // ---------------------------------------------------------------
 
+export type Subcategoria = {
+  slug: string
+  nome: string
+}
+
 export type Categoria = {
   slug: string
   nome: string
@@ -12,9 +17,42 @@ export type Categoria = {
   cor: string          // hex, o tom do espectro desta categoria
   precoDe: number
   prazoDias: [number, number]
+  subcategorias?: Subcategoria[]
 }
 
 export const categorias: Categoria[] = [
+  {
+    slug: 'chaveiros',
+    nome: 'Chaveiros',
+    chamada: 'Se mexem inteiros. Ninguém leva só um',
+    cor: '#7C5CD6',
+    precoDe: 35,
+    prazoDias: [2, 3],
+    subcategorias: [
+      { slug: 'articulados', nome: 'Articulados' },
+      { slug: 'personalizados', nome: 'Com nome' },
+    ],
+  },
+  {
+    slug: 'brinquedos',
+    nome: 'Brinquedos',
+    chamada: 'Para brincar e para ocupar a mão',
+    cor: '#EE7B30',
+    precoDe: 30,
+    prazoDias: [2, 4],
+    subcategorias: [
+      { slug: 'infantil', nome: 'Infantil' },
+      { slug: 'fidget', nome: 'Fidget' },
+    ],
+  },
+  {
+    slug: 'sensorial',
+    nome: 'Sensorial',
+    chamada: 'Textura, peso e movimento para acalmar a mão',
+    cor: '#17B3B0',
+    precoDe: 35,
+    prazoDias: [2, 4],
+  },
   {
     slug: 'organizacao',
     nome: 'Organização',
@@ -47,15 +85,10 @@ export const categorias: Categoria[] = [
     precoDe: 60,
     prazoDias: [3, 5],
   },
-  {
-    slug: 'chaveiros',
-    nome: 'Chaveiros articulados',
-    chamada: 'Se mexem inteiros. Ninguém leva só um',
-    cor: '#7C5CD6',
-    precoDe: 35,
-    prazoDias: [2, 3],
-  },
 ]
+
+export const subcategoriasDe = (slug?: string) =>
+  categorias.find((c) => c.slug === slug)?.subcategorias ?? []
 
 export const corDaCategoria = (slug?: string) =>
   categorias.find((c) => c.slug === slug)?.cor ?? '#12A66B'
@@ -81,16 +114,15 @@ export type Produto = {
   slug: string
   nome: string
   categoria: string
+  subcategoria?: string
   preco: number
   precoRiscado?: number
   descricao: string
+  imagem?: string      // caminho em /public. Vazio = usa o desenho da categoria
   personalizavel: boolean
   prazoDias: [number, number]
   destaque?: boolean
   avaliacao?: { nota: number; total: number }
-  // Caminho da foto dentro de /public, ex.: '/produtos/dragao.jpg'.
-  // Sem foto, o card mostra a silhueta colorida no lugar.
-  foto?: string
 }
 
 // Produtos de exemplo para o site funcionar antes de ligar o Supabase.
@@ -101,6 +133,7 @@ export const produtosExemplo: Produto[] = [
     slug: 'dragao-articulado',
     nome: 'Chaveiro dragão articulado',
     categoria: 'chaveiros',
+    subcategoria: 'articulados',
     preco: 39.9,
     descricao:
       'Sai da impressora já se mexendo, uma peça só, sem cola e sem encaixe. Tem 11 cm de ponta a ponta.',
@@ -166,6 +199,7 @@ export const produtosExemplo: Produto[] = [
     slug: 'gato-articulado',
     nome: 'Chaveiro gato articulado',
     categoria: 'chaveiros',
+    subcategoria: 'articulados',
     preco: 35.9,
     descricao: 'O clássico da casa. Nove centímetros de rabo que balança.',
     personalizavel: false,
@@ -177,6 +211,7 @@ export const produtosExemplo: Produto[] = [
     slug: 'kit-3-chaveiros',
     nome: 'Kit 3 chaveiros articulados',
     categoria: 'chaveiros',
+    subcategoria: 'articulados',
     preco: 94.9,
     precoRiscado: 119.7,
     descricao:
@@ -197,6 +232,66 @@ export const produtosExemplo: Produto[] = [
     personalizavel: false,
     prazoDias: [4, 6],
     avaliacao: { nota: 4.8, total: 11 },
+  },
+  {
+    id: '9',
+    slug: 'chaveiro-com-nome',
+    nome: 'Chaveiro com nome',
+    categoria: 'chaveiros',
+    subcategoria: 'personalizados',
+    preco: 29.9,
+    descricao:
+      'O nome sai em relevo, impresso junto com a peça. Até 12 letras.',
+    personalizavel: true,
+    prazoDias: [2, 3],
+  },
+  {
+    id: '10',
+    slug: 'fidget-infinito',
+    nome: 'Cubo fidget infinito',
+    categoria: 'brinquedos',
+    subcategoria: 'fidget',
+    preco: 44.9,
+    descricao:
+      'Dobra sem fim, uma peça só. Cabe na palma da mão e não faz barulho.',
+    personalizavel: false,
+    prazoDias: [2, 4],
+    destaque: true,
+  },
+  {
+    id: '11',
+    slug: 'quebra-cabeca-encaixe',
+    nome: 'Quebra-cabeça de encaixe',
+    categoria: 'brinquedos',
+    subcategoria: 'infantil',
+    preco: 39.9,
+    descricao:
+      'Seis peças grandes que encaixam entre si. Sem ponta e sem peça pequena.',
+    personalizavel: false,
+    prazoDias: [3, 5],
+  },
+  {
+    id: '12',
+    slug: 'corrente-sensorial',
+    nome: 'Corrente sensorial',
+    categoria: 'sensorial',
+    preco: 49.9,
+    descricao:
+      'Elos que deslizam entre os dedos. Sai da impressora já montada, sem emenda.',
+    personalizavel: false,
+    prazoDias: [2, 4],
+    destaque: true,
+  },
+  {
+    id: '13',
+    slug: 'disco-textura',
+    nome: 'Disco de textura',
+    categoria: 'sensorial',
+    preco: 35.9,
+    descricao:
+      'Um lado liso, o outro com sulcos. Para percorrer com o polegar.',
+    personalizavel: false,
+    prazoDias: [2, 3],
   },
 ]
 

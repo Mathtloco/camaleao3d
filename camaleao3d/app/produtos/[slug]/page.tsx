@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import CompraProduto from '@/components/CompraProduto'
 import CardProduto from '@/components/CardProduto'
+import ArteCategoria from '@/components/ArteCategoria'
 import { produtosExemplo, categorias, corDaCategoria, brl } from '@/lib/catalogo'
 
 export function generateStaticParams() {
@@ -40,18 +41,19 @@ export default function PaginaProduto({ params }: { params: { slug: string } }) 
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-14">
         {/* Foto */}
-        {p.foto ? (
+        {p.imagem ? (
           <img
-            src={p.foto}
+            src={p.imagem}
             alt={p.nome}
             className="aspect-square rounded-peca object-cover"
           />
         ) : (
           <div
-            className="aspect-square rounded-peca"
+            className="grid aspect-square place-items-center rounded-peca"
             style={{ background: `${cor}1A` }}
-            aria-hidden="true"
-          />
+          >
+            <ArteCategoria categoria={p.categoria} cor={cor} className="h-2/5 w-2/5 opacity-60" />
+          </div>
         )}
 
         {/* Compra */}

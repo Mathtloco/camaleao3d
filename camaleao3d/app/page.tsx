@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import CardProduto from '@/components/CardProduto'
+import ArteHome from '@/components/ArteHome'
 import { categorias, produtosExemplo, filamentos, brl } from '@/lib/catalogo'
 
 export default function Home() {
@@ -14,7 +15,7 @@ export default function Home() {
       ---------------------------------------------------------------- */}
       <section className="relative overflow-hidden bg-noite text-folha">
         <div className="absolute inset-0 bg-camadas" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
+        <div className="relative mx-auto grid max-w-6xl gap-10 px-5 pb-10 pt-12 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
           <div>
             <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm">
               <span className="h-2 w-2 rounded-full bg-espectro-organizacao" />
@@ -64,8 +65,15 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bloco de confiança: as três dúvidas que travam a compra */}
-          <ul className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+          {/* Arte de abertura. Vira foto quando houver uma. */}
+          <div className="order-first lg:order-none">
+            <ArteHome className="mx-auto w-full max-w-[320px] text-folha" />
+          </div>
+        </div>
+
+        {/* As três dúvidas que travam a compra */}
+        <div className="relative mx-auto max-w-6xl px-5 pb-14">
+          <ul className="grid gap-3 sm:grid-cols-3">
             {[
               { t: 'Garantia de 3 dias', d: 'Chegou com defeito, a gente refaz ou devolve o dinheiro.' },
               { t: 'Frete grátis', d: `Em pedidos acima de ${brl(150)} para todo o Brasil.` },
@@ -110,6 +118,11 @@ export default function Home() {
                   <p className="mt-1.5 leading-relaxed text-noite/70">
                     {c.chamada}
                   </p>
+                  {c.subcategorias && (
+                    <p className="mt-2.5 text-sm font-semibold text-noite/60">
+                      {c.subcategorias.map((s) => s.nome).join(' · ')}
+                    </p>
+                  )}
                 </div>
                 <p className="mt-6 text-sm font-semibold text-noite/75">
                   A partir de {brl(c.precoDe)} · {c.prazoDias[0]} a {c.prazoDias[1]} dias

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import ArteCategoria from './ArteCategoria'
 import { brl, corDaCategoria, type Produto } from '@/lib/catalogo'
 
 export default function CardProduto({ p }: { p: Produto }) {
@@ -13,23 +14,20 @@ export default function CardProduto({ p }: { p: Produto }) {
         className="relative aspect-square overflow-hidden rounded-peca"
         style={{ background: `${cor}1A` }}
       >
-        {p.foto ? (
+        {p.imagem ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={p.foto}
+            src={p.imagem}
             alt={p.nome}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
-          // Espaço da foto. Enquanto não houver imagem, mostramos a
-          // silhueta com a cor da categoria, para a grade não ficar vazia.
-          <div
-            className="absolute inset-0 grid place-items-center transition-transform duration-300 group-hover:scale-[1.03]"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 40 40" className="h-2/5 w-2/5" style={{ color: cor, opacity: 0.35 }} fill="none">
-              <path d="M20 4c-8.8 0-16 7.2-16 16s7.2 16 16 16" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" />
-              <path d="M20 36c6 0 11-5 11-11s-5-10-10-10-9 4-9 9 3.6 8 8 8 7-3.2 7-7-2.8-6-6-6-5 2.2-5 5 2 4 4 4 3.4-1.4 3.4-3.2" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+          <div className="absolute inset-0 grid place-items-center transition-transform duration-300 group-hover:scale-[1.05]">
+            <ArteCategoria
+              categoria={p.categoria}
+              cor={cor}
+              className="h-[55%] w-[55%] opacity-60"
+            />
           </div>
         )}
 
