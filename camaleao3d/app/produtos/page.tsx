@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import CardProduto from '@/components/CardProduto'
+import OrcamentoPersonalizado from '@/components/OrcamentoPersonalizado'
 import { categorias, produtosExemplo } from '@/lib/catalogo'
 
 // O filtro lê a categoria no navegador, e não no servidor, para a página
@@ -77,6 +78,8 @@ function Conteudo() {
           ))}
         </ul>
       )}
+
+      <OrcamentoPersonalizado />
     </>
   )
 }

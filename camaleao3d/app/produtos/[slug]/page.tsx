@@ -40,11 +40,19 @@ export default function PaginaProduto({ params }: { params: { slug: string } }) 
 
       <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-14">
         {/* Foto */}
-        <div
-          className="aspect-square rounded-peca"
-          style={{ background: `${cor}1A` }}
-          aria-hidden="true"
-        />
+        {p.foto ? (
+          <img
+            src={p.foto}
+            alt={p.nome}
+            className="aspect-square rounded-peca object-cover"
+          />
+        ) : (
+          <div
+            className="aspect-square rounded-peca"
+            style={{ background: `${cor}1A` }}
+            aria-hidden="true"
+          />
+        )}
 
         {/* Compra */}
         <div>

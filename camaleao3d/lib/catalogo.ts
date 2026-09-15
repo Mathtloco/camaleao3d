@@ -88,6 +88,9 @@ export type Produto = {
   prazoDias: [number, number]
   destaque?: boolean
   avaliacao?: { nota: number; total: number }
+  // Caminho da foto dentro de /public, ex.: '/produtos/dragao.jpg'.
+  // Sem foto, o card mostra a silhueta colorida no lugar.
+  foto?: string
 }
 
 // Produtos de exemplo para o site funcionar antes de ligar o Supabase.
