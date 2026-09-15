@@ -1,18 +1,14 @@
-// Preview estático no GitHub Pages: GITHUB_PAGES=true ativa `output: export`.
-// A versão real (Vercel/Hostinger, com API e Supabase) não usa essa variável
-// e continua rodando normalmente em modo servidor.
-const isGithubPages = process.env.GITHUB_PAGES === 'true'
+// Site 100% estático (sem API), publicável em GitHub Pages, Vercel ou
+// Hostinger sem precisar de servidor Node rodando.
 const repoName = 'camaleao3d'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  ...(isGithubPages && {
-    output: 'export',
-    basePath: `/${repoName}`,
-    assetPrefix: `/${repoName}/`,
-  }),
+  output: 'export',
+  basePath: process.env.GITHUB_PAGES === 'true' ? `/${repoName}` : undefined,
+  assetPrefix: process.env.GITHUB_PAGES === 'true' ? `/${repoName}/` : undefined,
   images: {
-    unoptimized: isGithubPages,
+    unoptimized: true,
     remotePatterns: [
       { protocol: 'https', hostname: '*.supabase.co' },
     ],

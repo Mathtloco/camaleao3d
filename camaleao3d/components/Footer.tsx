@@ -1,9 +1,7 @@
 import Link from 'next/link'
 import Logo from './Logo'
 import { categorias } from '@/lib/catalogo'
-
-const instagram = process.env.NEXT_PUBLIC_INSTAGRAM || 'camaleao3d'
-const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || ''
+import { WHATSAPP } from '@/lib/contato'
 
 export default function Footer() {
   return (
@@ -44,17 +42,10 @@ export default function Footer() {
           <p className="font-display font-bold tracking-aperto">Falar com a gente</p>
           <ul className="mt-3 space-y-2 text-sm text-giz">
             <li>
-              <a href={`https://instagram.com/${instagram}`} className="hover:text-folha">
-                @{instagram}
+              <a href={`https://wa.me/${WHATSAPP}`} className="hover:text-folha">
+                Chamar no WhatsApp
               </a>
             </li>
-            {whatsapp && (
-              <li>
-                <a href={`https://wa.me/${whatsapp}`} className="hover:text-folha">
-                  WhatsApp
-                </a>
-              </li>
-            )}
           </ul>
           <p className="mt-5 text-sm text-giz">
             Respondemos de segunda a sábado, das 9h às 19h.
@@ -65,7 +56,7 @@ export default function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-5 py-5 text-sm text-giz">
           <p>Camaleão3D · Impresso sob encomenda no Brasil</p>
-          <p>PIX · Cartão em até 3x · Boleto</p>
+          <p>Pagamento no PIX</p>
         </div>
       </div>
     </footer>

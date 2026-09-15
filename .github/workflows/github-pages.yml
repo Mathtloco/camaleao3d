@@ -33,11 +33,6 @@ jobs:
 
       - run: npm ci
 
-      # A rota de API (/api/reclamacao) precisa de servidor e não existe em
-      # export estático. Ela é removida só nesta cópia efêmera do runner,
-      # nunca no repositório — a versão real (Vercel/Hostinger) mantém a API.
-      - run: rm -rf app/api
-
       - run: npm run build
         env:
           GITHUB_PAGES: 'true'

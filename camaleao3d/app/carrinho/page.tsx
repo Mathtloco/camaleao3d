@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { useCarrinho } from '@/components/Carrinho'
+import CheckoutWhatsapp from '@/components/CheckoutWhatsapp'
 import { brl } from '@/lib/catalogo'
 
 const FRETE_GRATIS = 150
@@ -127,15 +128,9 @@ export default function PaginaCarrinho() {
             Ou 3x de {brl(totalFinal / 3)} sem juros.
           </p>
 
-          <button
-            disabled
-            className="mt-6 w-full cursor-not-allowed rounded-peca bg-noite py-3.5 font-bold text-folha opacity-50"
-          >
-            Pagar
-          </button>
-          <p className="mt-2 text-center text-xs text-noite/55">
-            O pagamento entra quando o Mercado Pago for conectado.
-          </p>
+          <div className="mt-6">
+            <CheckoutWhatsapp frete={frete} />
+          </div>
         </aside>
       </div>
     </main>

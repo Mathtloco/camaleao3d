@@ -1,10 +1,9 @@
-const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || ''
+import { WHATSAPP } from '@/lib/contato'
 
 export default function BotaoWhatsapp() {
-  if (!whatsapp) return null
   return (
     <a
-      href={`https://wa.me/${whatsapp}`}
+      href={`https://wa.me/${WHATSAPP}`}
       className="fixed bottom-5 right-5 z-30 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-105"
       aria-label="Falar no WhatsApp"
     >

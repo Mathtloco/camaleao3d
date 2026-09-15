@@ -2,8 +2,6 @@ import Link from 'next/link'
 import CardProduto from '@/components/CardProduto'
 import { categorias, produtosExemplo, filamentos, brl } from '@/lib/catalogo'
 
-const instagram = process.env.NEXT_PUBLIC_INSTAGRAM || 'camaleao3d'
-
 export default function Home() {
   const destaques = produtosExemplo.filter((p) => p.destaque)
 
@@ -192,27 +190,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------
-          Instagram
-      ---------------------------------------------------------------- */}
-      <section className="mx-auto max-w-6xl px-5 pb-20">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-nevoa pt-10">
-          <div>
-            <h2 className="text-2xl font-extrabold">
-              As peças novas saem primeiro no Instagram
-            </h2>
-            <p className="mt-1.5 text-noite/65">
-              Modelo novo, cor nova e promoção aparecem lá antes de entrar aqui.
-            </p>
-          </div>
-          <a
-            href={`https://instagram.com/${instagram}`}
-            className="rounded-peca border border-noite px-6 py-3 font-semibold"
-          >
-            Seguir @{instagram}
-          </a>
-        </div>
-      </section>
     </main>
   )
 }
