@@ -1,176 +1,218 @@
 import Link from 'next/link'
-import { nichos, brl } from '@/lib/nichos'
+import CardProduto from '@/components/CardProduto'
+import { categorias, produtosExemplo, filamentos, brl } from '@/lib/catalogo'
 
-const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP || ''
 const instagram = process.env.NEXT_PUBLIC_INSTAGRAM || 'camaleao3d'
 
-function FaixaEspectro() {
-  // A virada de cor do camaleão. Marca o fim de cada bloco.
-  return (
-    <div className="flex h-1 w-full" aria-hidden="true">
-      <div className="w-1/3 bg-musgo" />
-      <div className="w-1/3 bg-ambar" />
-      <div className="w-1/3 bg-coral" />
-    </div>
-  )
-}
-
 export default function Home() {
+  const destaques = produtosExemplo.filter((p) => p.destaque)
+
   return (
     <main>
-      {/* Topo */}
-      <header className="bg-casca text-placa">
-        <nav className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5">
-          <span className="text-lg font-extrabold tracking-aperto">
-            Camaleão3D
-          </span>
-          <div className="flex gap-6 text-sm">
-            <Link href="/produtos" className="hover:text-musgo">
-              Produtos
-            </Link>
-            <Link href="/sobre" className="hover:text-musgo">
-              Sobre
-            </Link>
-            <a
-              href={`https://instagram.com/${instagram}`}
-              className="hover:text-musgo"
-            >
-              Instagram
-            </a>
-          </div>
-        </nav>
-
-        {/* Hero — a textura são as linhas de camada que a impressora deixa */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-camadas" aria-hidden="true" />
-          <div className="relative mx-auto max-w-5xl px-5 pb-20 pt-12 sm:pb-28 sm:pt-20">
-            <h1 className="max-w-3xl text-[2.75rem] font-extrabold leading-[0.95] tracking-aperto sm:text-7xl">
-              A cor já vem dentro da peça.
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-placaEscura">
-              Nada aqui é pintado. Cada peça sai da impressora na cor final,
-              então não lasca, não descasca e não sai na mão. Feito uma a uma,
-              no Brasil.
+      {/* ---------------------------------------------------------------
+          Hero. A coisa mais característica da marca é a cor escolhida
+          virando peça, então é isso que abre a página: as bolinhas de
+          filamento, que é o que o cliente realmente escolhe.
+      ---------------------------------------------------------------- */}
+      <section className="relative overflow-hidden bg-noite text-folha">
+        <div className="absolute inset-0 bg-camadas" aria-hidden="true" />
+        <div className="relative mx-auto grid max-w-6xl gap-10 px-5 pb-16 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-16">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm">
+              <span className="h-2 w-2 rounded-full bg-espectro-organizacao" />
+              Impressão sob encomenda · envio para todo o Brasil
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+
+            <h1 className="mt-5 text-[2.6rem] font-extrabold leading-[0.97] sm:text-6xl">
+              Você escolhe a cor.
+              <br />
+              A gente imprime.
+            </h1>
+
+            <p className="mt-5 max-w-lg text-lg leading-relaxed text-giz">
+              Nada aqui é pintado. A cor está dentro do filamento, então não
+              lasca no bolso, não descasca na mão e não desbota no sol do
+              painel.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/produtos"
-                className="bg-musgo px-6 py-3 font-semibold text-casca transition-colors hover:bg-ambar"
+                className="rounded-peca bg-espectro-organizacao px-7 py-3.5 font-bold text-noite transition-transform active:scale-[.98]"
               >
                 Ver o catálogo
               </Link>
-              {whatsapp && (
-                <a
-                  href={`https://wa.me/${whatsapp}`}
-                  className="border border-placaEscura px-6 py-3 font-semibold text-placa transition-colors hover:border-musgo hover:text-musgo"
-                >
-                  Encomendar pelo WhatsApp
-                </a>
-              )}
+              <Link
+                href="/garantia"
+                className="rounded-peca border border-white/25 px-7 py-3.5 font-semibold transition-colors hover:border-white/60"
+              >
+                Como funciona a garantia
+              </Link>
+            </div>
+
+            {/* As 12 cores disponíveis, mostradas de verdade */}
+            <div className="mt-10">
+              <p className="text-sm text-giz">12 cores de filamento em estoque</p>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {filamentos.map((f) => (
+                  <li
+                    key={f.nome}
+                    title={f.nome}
+                    className="h-7 w-7 rounded-full ring-1 ring-white/25"
+                    style={{ background: f.hex }}
+                  />
+                ))}
+              </ul>
             </div>
           </div>
-        </div>
-        <FaixaEspectro />
-      </header>
 
-      {/* Nichos */}
-      <section className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
-        <h2 className="text-3xl font-extrabold tracking-aperto sm:text-4xl">
+          {/* Bloco de confiança: as três dúvidas que travam a compra */}
+          <ul className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {[
+              { t: 'Garantia de 3 dias', d: 'Chegou com defeito, a gente refaz ou devolve o dinheiro.' },
+              { t: 'Frete grátis', d: `Em pedidos acima de ${brl(150)} para todo o Brasil.` },
+              { t: 'Prazo honesto', d: 'Cada peça mostra em quantos dias fica pronta, antes de você pagar.' },
+            ].map((b) => (
+              <li key={b.t} className="rounded-peca bg-white/[.07] p-5">
+                <p className="font-display font-bold tracking-aperto">{b.t}</p>
+                <p className="mt-1 text-sm leading-relaxed text-giz">{b.d}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------------
+          Categorias — cada uma com a sua cor do espectro
+      ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+        <h2 className="text-3xl font-extrabold sm:text-4xl">
           O que a gente imprime
         </h2>
+        <p className="mt-2 text-noite/65">
+          Cada categoria tem a sua cor. Ela acompanha você pelo site inteiro.
+        </p>
 
-        <ul className="mt-10 divide-y divide-placaEscura border-y border-placaEscura">
-          {nichos.map((n) => (
-            <li key={n.slug}>
+        <ul className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categorias.map((c) => (
+            <li key={c.slug}>
               <Link
-                href={`/produtos?nicho=${n.slug}`}
-                className="group grid gap-3 py-7 sm:grid-cols-[1fr_auto] sm:items-start sm:gap-10"
+                href={`/produtos?categoria=${c.slug}`}
+                className="group flex h-full flex-col justify-between rounded-peca p-6 transition-transform active:scale-[.99]"
+                style={{ background: `${c.cor}1F` }}
               >
                 <div>
-                  <h3 className="text-xl font-bold tracking-aperto group-hover:text-musgo">
-                    {n.nome}
+                  <span
+                    className="inline-block h-3 w-3 rounded-full"
+                    style={{ background: c.cor }}
+                  />
+                  <h3 className="mt-3 text-xl font-bold group-hover:underline">
+                    {c.nome}
                   </h3>
-                  <p className="mt-1.5 max-w-lg leading-relaxed text-casca/70">
-                    {n.resumo}
-                  </p>
-                  <p className="mt-3 text-sm text-casca/55">
-                    {n.exemplos.join(' · ')}
+                  <p className="mt-1.5 leading-relaxed text-noite/70">
+                    {c.chamada}
                   </p>
                 </div>
-                <div className="text-sm sm:text-right">
-                  <p className="font-semibold">
-                    {brl(n.precoMin)} a {brl(n.precoMax)}
-                  </p>
-                  <p className="mt-1 text-casca/55">
-                    {n.horasMin}–{n.horasMax} h de impressão
-                  </p>
-                  <p className="text-casca/55">{n.material}</p>
-                </div>
+                <p className="mt-6 text-sm font-semibold text-noite/75">
+                  A partir de {brl(c.precoDe)} · {c.prazoDias[0]} a {c.prazoDias[1]} dias
+                </p>
               </Link>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* Como funciona — aqui a numeração faz sentido, é uma sequência */}
-      <section className="bg-casca text-placa">
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
-          <h2 className="text-3xl font-extrabold tracking-aperto sm:text-4xl">
-            Como chega até você
+      {/* ---------------------------------------------------------------
+          Mais vendidos
+      ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-6xl px-5 pb-16 sm:pb-20">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 className="text-3xl font-extrabold sm:text-4xl">Mais vendidos</h2>
+          <Link href="/produtos" className="font-semibold underline">
+            Ver tudo
+          </Link>
+        </div>
+
+        <ul className="mt-8 grid gap-x-5 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+          {destaques.map((p) => (
+            <li key={p.id}>
+              <CardProduto p={p} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ---------------------------------------------------------------
+          Como funciona — aqui a numeração faz sentido, é uma sequência
+      ---------------------------------------------------------------- */}
+      <section className="bg-noite text-folha">
+        <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+          <h2 className="text-3xl font-extrabold sm:text-4xl">
+            Do pedido até a sua mão
           </h2>
-          <ol className="mt-10 grid gap-8 sm:grid-cols-3">
+
+          <ol className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              {
-                t: 'Você escolhe a cor',
-                d: 'Cada modelo tem as cores de filamento disponíveis. O que você escolher é o que sai da máquina.',
-              },
-              {
-                t: 'A peça é impressa',
-                d: 'Nada fica pronto em estoque esperando. A impressão começa depois do seu pedido e leva de 2 a 12 horas.',
-              },
-              {
-                t: 'Sai para entrega',
-                d: 'Enviamos para todo o Brasil pelos Correios ou por entrega local, com o código de rastreio.',
-              },
+              { t: 'Escolha a peça e a cor', d: 'As 12 cores estão em estoque. A que você marcar é a que entra na máquina.' },
+              { t: 'A impressão começa', d: 'Nada fica parado esperando comprador. A sua peça nasce depois do pedido.' },
+              { t: 'Conferência', d: 'Cada peça é olhada antes de embalar. Se saiu torta, ela não é enviada.' },
+              { t: 'Envio com rastreio', d: 'Você recebe o código e acompanha até a porta de casa.' },
             ].map((p, i) => (
               <li key={p.t}>
-                <span className="block text-sm font-bold text-musgo">
-                  Passo {i + 1}
+                <span className="font-display text-3xl font-extrabold tracking-aperto text-espectro-organizacao">
+                  {i + 1}
                 </span>
-                <h3 className="mt-2 text-lg font-bold tracking-aperto">
-                  {p.t}
-                </h3>
-                <p className="mt-2 leading-relaxed text-placaEscura">{p.d}</p>
+                <h3 className="mt-2 text-lg font-bold">{p.t}</h3>
+                <p className="mt-1.5 leading-relaxed text-giz">{p.d}</p>
               </li>
             ))}
           </ol>
         </div>
-        <FaixaEspectro />
       </section>
 
-      {/* Rodapé */}
-      <footer className="mx-auto max-w-5xl px-5 py-14">
-        <p className="text-2xl font-extrabold tracking-aperto">Camaleão3D</p>
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
-          <a href={`https://instagram.com/${instagram}`} className="underline">
-            @{instagram}
-          </a>
-          {whatsapp && (
-            <a href={`https://wa.me/${whatsapp}`} className="underline">
-              WhatsApp
-            </a>
-          )}
-          <Link href="/produtos" className="underline">
-            Produtos
-          </Link>
-          <Link href="/sobre" className="underline">
-            Sobre
+      {/* ---------------------------------------------------------------
+          Garantia, dita em uma frase
+      ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
+        <div className="rounded-peca bg-espectro-organizacao/12 p-8 sm:p-12">
+          <h2 className="max-w-2xl text-3xl font-extrabold sm:text-4xl">
+            Chegou com defeito? Você tem 3 dias e a gente resolve.
+          </h2>
+          <p className="mt-4 max-w-xl leading-relaxed text-noite/75">
+            Abra o chamado aqui mesmo no site, com uma foto. A gente responde em
+            até 24 horas e escolhe com você: imprimir de novo ou devolver o
+            dinheiro. Sem precisar discutir.
+          </p>
+          <Link
+            href="/garantia"
+            className="mt-7 inline-block rounded-peca bg-noite px-7 py-3.5 font-bold text-folha"
+          >
+            Ler a garantia
           </Link>
         </div>
-        <p className="mt-8 text-sm text-casca/55">
-          Impresso sob encomenda no Brasil.
-        </p>
-      </footer>
+      </section>
+
+      {/* ---------------------------------------------------------------
+          Instagram
+      ---------------------------------------------------------------- */}
+      <section className="mx-auto max-w-6xl px-5 pb-20">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-nevoa pt-10">
+          <div>
+            <h2 className="text-2xl font-extrabold">
+              As peças novas saem primeiro no Instagram
+            </h2>
+            <p className="mt-1.5 text-noite/65">
+              Modelo novo, cor nova e promoção aparecem lá antes de entrar aqui.
+            </p>
+          </div>
+          <a
+            href={`https://instagram.com/${instagram}`}
+            className="rounded-peca border border-noite px-6 py-3 font-semibold"
+          >
+            Seguir @{instagram}
+          </a>
+        </div>
+      </section>
     </main>
   )
 }

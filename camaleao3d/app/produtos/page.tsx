@@ -1,129 +1,81 @@
 import Link from 'next/link'
-import { supabase } from '@/lib/supabase'
-import { nichos, brl } from '@/lib/nichos'
+import CardProduto from '@/components/CardProduto'
+import { categorias, produtosExemplo } from '@/lib/catalogo'
 
 export const metadata = { title: 'Produtos' }
-export const revalidate = 60
 
-type Produto = {
-  id: string
-  slug: string
-  nome: string
-  descricao: string | null
-  preco: number
-  imagens: string[]
-  cores: string[]
-}
-
-export default async function Produtos({
+export default function Catalogo({
   searchParams,
 }: {
-  searchParams: { nicho?: string }
+  searchParams: { categoria?: string }
 }) {
-  const nichoAtual = searchParams.nicho
-  let produtos: Produto[] = []
-  let bancoConfigurado = false
-
-  if (supabase) {
-    bancoConfigurado = true
-    let q = supabase
-      .from('produtos')
-      .select('id, slug, nome, descricao, preco, imagens, cores, categorias!inner(slug)')
-      .eq('ativo', true)
-      .order('criado_em', { ascending: false })
-
-    if (nichoAtual) q = q.eq('categorias.slug', nichoAtual)
-
-    const { data } = await q
-    produtos = (data as unknown as Produto[]) || []
-  }
+  const atual = searchParams.categoria
+  const cat = categorias.find((c) => c.slug === atual)
+  const lista = atual
+    ? produtosExemplo.filter((p) => p.categoria === atual)
+    : produtosExemplo
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-12">
-      <Link href="/" className="text-sm underline">
-        Camaleão3D
-      </Link>
-
-      <h1 className="mt-6 text-4xl font-extrabold tracking-aperto sm:text-5xl">
-        Produtos
+    <main className="mx-auto max-w-6xl px-5 py-10 sm:py-14">
+      <h1 className="text-4xl font-extrabold sm:text-5xl">
+        {cat ? cat.nome : 'Todos os produtos'}
       </h1>
+      <p className="mt-2 text-noite/65">
+        {cat ? cat.chamada : 'Escolha a peça e depois a cor do filamento.'}
+      </p>
 
-      {/* Filtro por nicho */}
+      {/* Filtro por categoria */}
       <div className="mt-7 flex flex-wrap gap-2">
         <Link
           href="/produtos"
-          className={`border px-4 py-2 text-sm ${
-            !nichoAtual
-              ? 'border-casca bg-casca text-placa'
-              : 'border-placaEscura hover:border-casca'
+          className={`rounded-peca border px-4 py-2 text-sm font-semibold ${
+            !atual ? 'border-noite bg-noite text-folha' : 'border-nevoa hover:border-noite'
           }`}
         >
           Tudo
         </Link>
-        {nichos.map((n) => (
-          <Link
-            key={n.slug}
-            href={`/produtos?nicho=${n.slug}`}
-            className={`border px-4 py-2 text-sm ${
-              nichoAtual === n.slug
-                ? 'border-casca bg-casca text-placa'
-                : 'border-placaEscura hover:border-casca'
-            }`}
-          >
-            {n.nome}
-          </Link>
-        ))}
+        {categorias.map((c) => {
+          const ativo = atual === c.slug
+          return (
+            <Link
+              key={c.slug}
+              href={`/produtos?categoria=${c.slug}`}
+              className="flex items-center gap-2 rounded-peca border px-4 py-2 text-sm font-semibold"
+              style={
+                ativo
+                  ? { background: c.cor, borderColor: c.cor, color: '#0E2A22' }
+                  : { borderColor: '#DCE4DA' }
+              }
+            >
+              {!ativo && (
+                <span className="h-2 w-2 rounded-full" style={{ background: c.cor }} />
+              )}
+              {c.nome}
+            </Link>
+          )
+        })}
       </div>
 
-      {/* Estados vazios: dizem o que fazer, não pedem desculpa */}
-      {!bancoConfigurado && (
-        <div className="mt-12 border border-placaEscura p-7">
-          <h2 className="text-lg font-bold tracking-aperto">
-            O banco ainda não está conectado
-          </h2>
-          <p className="mt-2 max-w-lg leading-relaxed text-casca/70">
-            Preencha <code className="font-mono">NEXT_PUBLIC_SUPABASE_URL</code>{' '}
-            e <code className="font-mono">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>{' '}
-            no arquivo <code className="font-mono">.env.local</code> e reinicie o
-            servidor. O passo a passo está no SETUP.md.
+      {lista.length === 0 ? (
+        <div className="mt-14 rounded-peca border border-nevoa p-8">
+          <h2 className="text-lg font-bold">Ainda não tem peça nesta categoria</h2>
+          <p className="mt-2 max-w-md leading-relaxed text-noite/70">
+            Estamos modelando as primeiras. Enquanto isso, dá uma olhada no
+            resto do catálogo.
           </p>
+          <Link href="/produtos" className="mt-5 inline-block font-semibold underline">
+            Ver tudo
+          </Link>
         </div>
+      ) : (
+        <ul className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+          {lista.map((p) => (
+            <li key={p.id}>
+              <CardProduto p={p} />
+            </li>
+          ))}
+        </ul>
       )}
-
-      {bancoConfigurado && produtos.length === 0 && (
-        <div className="mt-12 border border-placaEscura p-7">
-          <h2 className="text-lg font-bold tracking-aperto">
-            Nenhum produto cadastrado ainda
-          </h2>
-          <p className="mt-2 max-w-lg leading-relaxed text-casca/70">
-            Cadastre o primeiro produto no painel do Supabase, na tabela{' '}
-            <code className="font-mono">produtos</code>, e ele aparece aqui.
-          </p>
-        </div>
-      )}
-
-      <ul className="mt-12 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-        {produtos.map((p) => (
-          <li key={p.id}>
-            <Link href={`/produtos/${p.slug}`} className="group block">
-              <div className="aspect-square overflow-hidden bg-placaEscura">
-                {p.imagens?.[0] && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={p.imagens[0]}
-                    alt={p.nome}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
-              <h2 className="mt-3 font-bold tracking-aperto group-hover:text-musgo">
-                {p.nome}
-              </h2>
-              <p className="mt-0.5 text-sm text-casca/70">{brl(p.preco)}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
     </main>
   )
 }
